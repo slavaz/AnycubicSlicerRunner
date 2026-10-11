@@ -33,7 +33,8 @@ if echo "$OUTPUT" | grep -q "New version" && echo "$OUTPUT" | grep -q "saved to 
     mv "$APP_DIR"/* "$BACKUP_PATH"/ 2>/dev/null || true
   fi
 
-  LATEST_DEB_FILE=$(ls "$DEB_PACKAGES_DIR"/*.deb | sort | tail -n 1)
+  # sort by modification time — newest first — to avoid alphabetical ordering issues
+  LATEST_DEB_FILE=$(ls -t "$DEB_PACKAGES_DIR"/*.deb | head -n 1)
   TEMP_DIR=$(mktemp -d)
 
 

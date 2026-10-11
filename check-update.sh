@@ -28,7 +28,8 @@ else
 fi
 
 # Fetch the package metadata
-PACKAGE_METADATA=$(curl -s "$REPO_URL")
+# TODO: remove --insecure once Anycubic renews their CDN certificate (expired 2026-10-10)
+PACKAGE_METADATA=$(curl -sk "$REPO_URL")
 
 # Extract the latest version available from the metadata
 LATEST_VERSION=$(echo "$PACKAGE_METADATA" | grep -oP "(?<=Version: )\S+")
@@ -42,7 +43,7 @@ if [[ "$LATEST_VERSION" != "$INSTALLED_VERSION" ]]; then
   echo "Downloading new version..."
 
   # Download the new version of the .deb package to the download directory
-  curl -o "$DOWNLOAD_DIR/$(basename "$PACKAGE_FILE")" "https://cdn-universe-slicer.anycubic.com/prod/$PACKAGE_FILE"
+  curl -k -o "$DOWNLOAD_DIR/$(basename "$PACKAGE_FILE")" "https://cdn-universe-slicer.anycubic.com/prod/$PACKAGE_FILE"
 
   # Write the new version to version.txt
   echo "$LATEST_VERSION" > "$VERSION_FILE"
