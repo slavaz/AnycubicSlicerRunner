@@ -2,3 +2,6 @@ backups
 deb-packages
 app
 version.txt
+workbench-fix/acnext-workbench-fix.so
+logs
+tmp

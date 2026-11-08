@@ -18,8 +18,8 @@ AnycubicSlicerRunner is a set of Bash scripts for managing and updating Anycubic
 ## Project Structure
 
 - `AnycubicSlicer.sh` - Main launcher script
-- `check-update.sh` - Checks for new versions and downloads updates
-- `updater.sh` - Handles backup and update installation
+- `helpers/check-update.sh` - Checks for new versions and downloads updates
+- `helpers/updater.sh` - Handles backup and update installation
 
 
 ## Usage
@@ -29,15 +29,15 @@ AnycubicSlicerRunner is a set of Bash scripts for managing and updating Anycubic
 Run the updater script:
 
 ```bash
-bash updater.sh
+bash helpers/updater.sh
 ```
 This will backup the current application files and install the latest downloaded version.
 
 ### Automated Weekly Updates with Cron
-You can automate updates by running `updater.sh` once per week using cron. For example, if the project is installed in `~/opt/AnycubicSlicer`, add the following line to your crontab (edit with `crontab -e`):
+You can automate updates by running `helpers/updater.sh` once per week using cron. For example, if the project is installed in `~/opt/AnycubicSlicer`, add the following line to your crontab (edit with `crontab -e`):
 
 ```
-0 3 * * 0 bash ~/opt/AnycubicSlicer/updater.sh
+0 3 * * 0 bash ~/opt/AnycubicSlicer/helpers/updater.sh
 ```
 This will run the updater every Sunday at 3:00 AM.
 
