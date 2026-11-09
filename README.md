@@ -47,7 +47,26 @@ This runs the updater every Sunday at 3:00 AM, backing up the current installati
 
 Anycubic Slicer Next is compiled against an older Ubuntu environment. On modern Linux distributions (such as Fedora 42/43/44 with WebKit2GTK 4.1 2.42+), multiple breaking incompatibilities occur out of the box. 
 
-This repository provides an automated `LD_PRELOAD` shim ([`workbench-fix/acnext-workbench-fix.c`](workbench-fix/acnext-workbench-fix.c)) compiled automatically on launch by [`AnycubicSlicer.sh`](AnycubicSlicer.sh), resolving the following issues without modifying proprietary binaries:
+This repository provides an automated `LD_PRELOAD` shim ([`workbench-fix/acnext-workbench-fix.c`](workbench-fix/acnext-workbench-fix.c)) compiled automatically on launch by [`AnycubicSlicer.sh`](AnycubicSlicer.sh) or manually via [`workbench-fix/Makefile`](workbench-fix/Makefile), resolving the following issues without modifying proprietary binaries:
+
+### Building the Compatibility Shim
+
+The shim is built automatically when you launch `./AnycubicSlicer.sh` if it hasn't been built yet or if the source file was updated.
+
+To build, clean, or debug manually:
+
+```bash
+# Build the shared library (acnext-workbench-fix.so)
+make -C workbench-fix
+
+# Clean built artifacts
+make -C workbench-fix clean
+
+# Debug build with symbols (-g -O0)
+make -C workbench-fix DEBUG=1
+```
+
+> **Note:** No WebKit2GTK or GTK development packages (`-devel`) are required. The shim only requires a standard C compiler (`gcc` or `clang`), `make`, and `glibc`.
 
 ### 1. Fontconfig / Skia Infinite Loop Workaround (Blank WebViews & Process Hang)
 * **Symptom:** All embedded WebViews (Home, MakerOnline, Workbench, and the Casdoor login modal) remain completely blank. When closing the main window, the process hangs in the terminal and requires `Ctrl+C`.
@@ -95,6 +114,7 @@ AnycubicSlicer/
 │   ├── check-update.sh                 # Fetches latest version metadata and downloads .deb packages
 │   └── updater.sh                      # Handles backups, extraction, desktop icon setup, and font links
 ├── workbench-fix/
+│   ├── Makefile                        # Build script for the compatibility shim
 │   ├── acnext-workbench-fix.c          # C source for the LD_PRELOAD compatibility shim
 │   └── acnext-workbench-fix.so         # Auto-compiled shared library (excluded from git)
 ├── deb-packages/                       # Downloaded .deb packages (cached)
@@ -114,7 +134,7 @@ AnycubicSlicer/
 
 - Linux (x86_64)
 - Bash 4+
-- `gcc` (to build the lightweight compatibility shim on first launch)
+- `gcc` or `clang`, and `make` (to build the compatibility shim)
 - `git`
 - `curl`
 - `ar` (from `binutils`) and `tar` (for `.deb` package extraction)

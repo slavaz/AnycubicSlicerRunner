@@ -47,10 +47,15 @@ unset WEBKIT_SKIA_ENABLE_CPU_RENDERING
 # 4) Clamps negative dimensions < -1 passed to gtk_widget_set_size_request().
 # 5) Injects missing MIME types for pages:// URIs on Workbench tab (issue #64).
 # 6) Re-issues target URI if about:blank finishes after target during view initialization.
-WORKBENCH_FIX_SRC="$PROJECT_ROOT/workbench-fix/acnext-workbench-fix.c"
-WORKBENCH_FIX="$PROJECT_ROOT/workbench-fix/acnext-workbench-fix.so"
+WORKBENCH_FIX_DIR="$PROJECT_ROOT/workbench-fix"
+WORKBENCH_FIX_SRC="$WORKBENCH_FIX_DIR/acnext-workbench-fix.c"
+WORKBENCH_FIX="$WORKBENCH_FIX_DIR/acnext-workbench-fix.so"
 if [[ -f "$WORKBENCH_FIX_SRC" ]] && { [[ ! -f "$WORKBENCH_FIX" ]] || [[ "$WORKBENCH_FIX_SRC" -nt "$WORKBENCH_FIX" ]]; }; then
-    gcc -shared -fPIC -O2 -o "$WORKBENCH_FIX" "$WORKBENCH_FIX_SRC" -ldl
+    if command -v make >/dev/null 2>&1 && [[ -f "$WORKBENCH_FIX_DIR/Makefile" ]]; then
+        make -C "$WORKBENCH_FIX_DIR"
+    else
+        gcc -shared -fPIC -O2 -o "$WORKBENCH_FIX" "$WORKBENCH_FIX_SRC" -ldl
+    fi
 fi
 if [[ -f "$WORKBENCH_FIX" ]]; then
     export LD_PRELOAD="$WORKBENCH_FIX${LD_PRELOAD:+:$LD_PRELOAD}"
